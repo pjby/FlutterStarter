@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:playlistapp/NewSong.dart';
+import 'package:playlistapp/models.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -9,6 +11,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Song> songs = List<Song>.generate(
+      150,
+      (i) => Song(
+            albumName: 'Album $i',
+            songName: 'Song $i',
+            artistName: 'Artist $i',
+            lengthInSec: i,
+            url: 'https://$i/',
+          ));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,10 +28,60 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Text(
-          'Placeholder',
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 20,
+              ),
+              child: Text(
+                "Haoye's Playlist",
+                style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 2,
+                    ),
+                    child: Card(
+                      child: ListTile(
+                        leading: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.music_note,
+                            ),
+                            Text(songs[index].lengthInSec.toString()),
+                          ],
+                        ),
+                        title: Text(songs[index].songName),
+                        subtitle: Text(songs[index].artistName),
+                        trailing: Icon(
+                          Icons.keyboard_arrow_right,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                itemCount: songs.length,
+              ),
+            ),
+          ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => NewSong())),
       ),
     );
   }
+
+  //void addSong() {}
 }
