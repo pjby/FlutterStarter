@@ -50,24 +50,52 @@ class _HomePageState extends State<HomePage> {
                       horizontal: 10,
                       vertical: 2,
                     ),
-                    child: Card(
-                      child: ListTile(
-                        leading: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.music_note,
-                            ),
-                            Text(songs[index].lengthInSec.toString()),
-                          ],
+                    child: Dismissible(
+                      onDismissed: (direction){
+                        Song song = songs[index];
+                        setState(() {
+                          songs.removeAt(index);
+                        });
+                        Scaffold.of(context).hideCurrentSnackBar();
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            'Deleted ${songs[index].songName} from the list'
+                          ),
+                          action: SnackBarAction(
+                            textColor: Colors.blue,
+                            onPressed: (){
+                              songs.insert(index, song);
+                            },
+                            label: 'UNDO',
+                          ),
+                        ));
+                      },
+                      background: Container(
+                        margin: EdgeInsets.symmetric(
+                          vertical: 4,
                         ),
-                        title: Text(songs[index].songName),
-                        subtitle: Text(songs[index].artistName),
-                        trailing: Icon(
-                          Icons.keyboard_arrow_right,
+                        color: Colors.red,
+                      ),
+                      key: Key(songs[index].toString()),
+                      child: Card(
+                        child: ListTile(
+                          leading: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.music_note,
+                              ),
+                              Text(songs[index].lengthInSec.toString()),
+                            ],
+                          ),
+                          title: Text(songs[index].songName),
+                          subtitle: Text(songs[index].artistName),
+                          trailing: Icon(
+                            Icons.keyboard_arrow_right,
+                          ),
                         ),
                       ),
-                    ),
+                    )
                   );
                 },
                 itemCount: songs.length,
